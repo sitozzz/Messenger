@@ -19,7 +19,8 @@ $(function() {
         Parse.User.logIn(username, password, {
             // If the username and password matches
             success: function(user) {
-                alert('Welcome!');
+                window.location.href="main.html";
+                //alert('Welcome!');
             },
             // If there is an error
             error: function(user, error) {
