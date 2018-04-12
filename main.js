@@ -14,7 +14,23 @@ $(function () {
 
     document.getElementById("username").innerText = Parse.User.current().get("username")
 
-
+    var Chat = Parse.Object.extend("Chat");
+    var chat = new Chat();
+    chat.set("LastMessage", "Some message here");
+    chat.set("UserID", currentUser.id);
+    console.log(currentUser.id);
+    chat.set("UserName", currentUser.get("username"));
+    chat.save(null,{
+        success: function(chat){
+            var query = new Parse.Query(Chat);
+            query.equalTo("UserID", currentUser.id);
+            query.find({
+                success:function (usersChat) {
+                   console.log(usersChat);
+                }
+            });
+        }
+    });
     // var user = Parse.User.current();
 
     // // Make a new post
@@ -35,5 +51,4 @@ $(function () {
     //         });
     //     }
     // });
-
 });
