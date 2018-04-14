@@ -11,42 +11,77 @@ $(function () {
     } else {
         console.log('not');
     }
+    username = Parse.User.current().get("username");
+    document.getElementById("username").innerText = username
 
-    document.getElementById("username").innerText = Parse.User.current().get("username")
+    function getAllChats() {
+        var Chat = Parse.Object.extend("Chat");
+        //Основной элемент для заполнения
+        var articleDiv = document.querySelector("ul.shoutbox-content");
+        //Здесь будет цикл, но его пока нету:)
+        var li = document.createElement("li");
+        var span = document.createElement("span")
+        span.className = "shoutbox-username";
+        
+        var liText = document.createTextNode(username);
+        span.appendChild(liText);
 
-    var Chat = Parse.Object.extend("Chat");
-    var chat = new Chat();
-    chat.set("LastMessage", "Some message here");
-    chat.set("UserID", currentUser.id);
-    console.log(currentUser.id);
-    chat.set("UserName", currentUser.get("username"));
-    chat.save(null,{
-        success: function(chat){
-            var query = new Parse.Query(Chat);
-            query.equalTo("UserID", currentUser.id);
-            query.find({
-                success:function (usersChat) {
-                   console.log(usersChat);
-                }
-            });
-        }
-    });
-    // var user = Parse.User.current();
+        var p = document.createElement("p");
+        p.className = "shoutbox-comment";
+        var dateQuery = new Parse.Query(Chat);
+        dateQuery.descending("createdAt");
+        dateQuery.limit(1);
+        //dateQuery.include("LastMessage");
+        dateQuery.find({
+            success: function (msg) {
+                var pText = document.createTextNode(msg[0].get("LastMessage"));
+                p.appendChild(pText);
+            }
+        });
+        
 
-    // // Make a new post
-    // var Post = Parse.Object.extend("Post");
-    // var post = new Post();
-    // post.set("title", "My New Post");
-    // post.set("body", "This is some great content.");
-    // post.set("user", user);
-    // post.save(null, {
-    //     success: function (post) {
-    //         // Find all posts by the current user
-    //         var query = new Parse.Query(Post);
-    //         query.equalTo("user", user);
+       
+        var spanDate = document.createElement("span");
+        spanDate.className = "shoutbox-comment-ago";
+        var dateText = document.createTextNode("10.20.12");
+        spanDate.appendChild(dateText);
+
+        
+        li.appendChild(span);
+        li.appendChild(p);
+        li.appendChild(spanDate);
+        
+        articleDiv.appendChild(li);
+        
+        
+        //var ul = document.getElementById("chat-container");
+        // var li = document.createElement("li");
+        // li.innerText = "Created element by js";
+        // ul.appendChild(li);
+
+        // ul.append('<li>' +
+        //     '<span class="shoutbox-username">' + Parse.User.current().get("username") + '</span>' +
+        //     '<p class="shoutbox-comment">' + "comment to add" + '</p>' +
+        //     '<div class="shoutbox-comment-details"><span class="shoutbox-comment-reply" data-name="' + "Another Name " + '">REPLY</span>' +
+        //     '<span class="shoutbox-comment-ago">' + "Date here" + '</span></div>' +
+        //     '</li>');
+    }
+    getAllChats();
+
+    //Пример добавления и получения данных
+    // var Chat = Parse.Object.extend("Chat");
+    // var chat = new Chat();
+    // chat.set("LastMessage", "Some message here");
+    // chat.set("UserID", currentUser.id);
+    // console.log(currentUser.id);
+    // chat.set("UserName", currentUser.get("username"));
+    // chat.save(null,{
+    //     success: function(chat){
+    //         var query = new Parse.Query(Chat);
+    //         query.equalTo("UserID", currentUser.id);
     //         query.find({
-    //             success: function (usersPosts) {
-    //                 // userPosts contains all of the posts by the current user.
+    //             success:function (usersChat) {
+    //                console.log(usersChat);
     //             }
     //         });
     //     }
