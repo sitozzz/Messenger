@@ -18,41 +18,48 @@ $(function () {
         var Chat = Parse.Object.extend("Chat");
         //Основной элемент для заполнения
         var articleDiv = document.querySelector("ul.shoutbox-content");
-        //Здесь будет цикл, но его пока нету:)
-        var li = document.createElement("li");
-        var span = document.createElement("span")
-        span.className = "shoutbox-username";
         
-        var liText = document.createTextNode(username);
-        span.appendChild(liText);
 
-        var p = document.createElement("p");
-        p.className = "shoutbox-comment";
+        
         var dateQuery = new Parse.Query(Chat);
-        dateQuery.descending("createdAt");
-        dateQuery.limit(1);
+        dateQuery.descending("updatedAt");
+        dateQuery.limit(50);
         //dateQuery.include("LastMessage");
         dateQuery.find({
             success: function (msg) {
-                var pText = document.createTextNode(msg[0].get("LastMessage"));
-                p.appendChild(pText);
+                for (let i = 0; i < msg.length; i++) {
+                    var p = document.createElement("p");
+                    p.className = "shoutbox-comment";
+                    //Здесь будет цикл, но его пока нету:)
+                    var li = document.createElement("li");
+                    var span = document.createElement("span")
+                    span.className = "shoutbox-username";
+                    li.className = "liClass";
+                    var liText = document.createTextNode(msg[i].get("ToUser"));
+                    span.appendChild(liText);
+                    var pText = document.createTextNode(msg[i].get("LastMessage"));
+                    p.appendChild(pText);
+                    
+                    var spanDate = document.createElement("span");
+                    spanDate.className = "shoutbox-comment-ago";
+                    var dateText = document.createTextNode(msg[i].get("updatedAt"));
+                    spanDate.appendChild(dateText);
+                    
+                    li.appendChild(span);
+                    li.appendChild(p);
+                    li.appendChild(spanDate);
+                    
+                    articleDiv.appendChild(li);
+                }
+                
             }
         });
-        
-
-       
-        var spanDate = document.createElement("span");
-        spanDate.className = "shoutbox-comment-ago";
-        var dateText = document.createTextNode("10.20.12");
-        spanDate.appendChild(dateText);
-
-        
-        li.appendChild(span);
-        li.appendChild(p);
-        li.appendChild(spanDate);
-        
-        articleDiv.appendChild(li);
-        
+        var mod = document.querySelectorAll('.liClass');
+        for (let index = 0; index < mod.length; index++) {
+            mod[index].addEventListener('click', function (user_id) {
+                window.location.href="chat.html?User=" + user_id;
+            });
+        }
         
         //var ul = document.getElementById("chat-container");
         // var li = document.createElement("li");
