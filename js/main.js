@@ -22,11 +22,13 @@ $(function () {
 
         
         var dateQuery = new Parse.Query(Chat);
+        
         dateQuery.descending("updatedAt");
         dateQuery.limit(50);
         //dateQuery.include("LastMessage");
         dateQuery.find({
             success: function (msg) {
+                var msgArray = msg;
                 for (let i = 0; i < msg.length; i++) {
                     var p = document.createElement("p");
                     p.className = "shoutbox-comment";
@@ -56,8 +58,8 @@ $(function () {
         });
         var mod = document.querySelectorAll('.liClass');
         for (let index = 0; index < mod.length; index++) {
-            mod[index].addEventListener('click', function (user_id) {
-                window.location.href="chat.html?User=" + user_id;
+            mod[index].addEventListener('click', function () {
+                window.location.href="chat.html?User=" + msgArray[index].get("ToUser");
             });
         }
         
