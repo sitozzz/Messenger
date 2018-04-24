@@ -37,6 +37,10 @@ $(function () {
                     var span = document.createElement("span")
                     span.className = "shoutbox-username";
                     li.className = "liClass";
+                    li.onclick = function () {
+                            console.log("click li");
+                            window.location.href = "chat.html?User=" + msgArray[i].get("ToUser");
+                    }
                     var liText = document.createTextNode(msg[i].get("ToUser"));
                     span.appendChild(liText);
                     var pText = document.createTextNode(msg[i].get("LastMessage"));
@@ -56,12 +60,12 @@ $(function () {
                 
             }
         });
-        var mod = document.querySelectorAll('.liClass');
-        for (let index = 0; index < mod.length; index++) {
-            mod[index].addEventListener('click', function () {
-                window.location.href="chat.html?User=" + msgArray[index].get("ToUser");
-            });
-        }
+        // var mod = document.querySelectorAll('.liClass');
+        // for (let index = 0; index < mod.length; index++) {
+        //     mod[index].addEventListener('click', function () {
+        //         window.location.href="chat.html?User=" + msgArray[index].get("ToUser");
+        //     });
+        // }
         
         //var ul = document.getElementById("chat-container");
         // var li = document.createElement("li");

@@ -1,9 +1,3 @@
-
-
-
-
-
-
 function parseUrlQuery() { 
     var data = {}; 
     if (location.search) { 
@@ -16,5 +10,5 @@ function parseUrlQuery() {
     return data; 
     } 
     
-    adress = parseUrlQuery()['Adresse'];
+    adress = parseUrlQuery()['User'];
     console.log(adress);
