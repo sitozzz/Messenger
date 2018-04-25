@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,17 +9,30 @@
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/main.css">
 </head>
+
 <body>
-    <h1>Welcome, <span id="username"></span> <img src='./img/refresh.png'/</h1>
+    <h1>Welcome,
+        <span id="username"></span>
+        <img src='./img/refresh.png' />
+    </h1>
 
     <div class="shoutbox">
-        <h2>Your chats <img src='./img/refresh.png'/></h2>
+        <h2>Your chats
+            <img src='./img/refresh.png' />
+        </h2>
         <!--Сюда чаты и последние сообщения-->
         <ul class="shoutbox-content" id="chat-container"></ul>
     </div>
+    <div class="footer">
 
+        <button class="btn btn-default" type="button" id="new_chat">
+            <span class="glyphicon glyphicon-star" aria-hidden="true"></span>Add New Chat
+        </button>
+
+    </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="js/parse.js"></script>
     <script src="js/main.js"></script>
 </body>
+
 </html>

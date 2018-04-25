@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,10 +9,30 @@
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/main.css">
 </head>
+
 <body>
-   
+    <div class="shoutbox">
+        <h1>Your chat with 
+            <span id="chatwith"></span>
+            <img src='./img/refresh.png' />
+        </h1>
+        <!--Сюда чаты и последние сообщения-->
+        <ul class="shoutbox-content" id="chat-container">
+
+        </ul>
+
+        <form class="shoutbox-form">
+            <input type="text" class="form-control" id="message">
+            <button type="button" class="btn btn-success" id="send_msg">Send</button>
+        </form>
+    </div>
+
+
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="js/parse.js"></script>
     <script src="js/chat.js"></script>
 </body>
+
 </html>

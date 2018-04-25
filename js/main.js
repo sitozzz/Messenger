@@ -5,7 +5,7 @@ $(function () {
         "Kc9c2eku460JzgK2M9S2Ev6n3PNsj5bWFOPSEYna",
         "qHlJuzaCNON0INY3Ysy8h9CWPar58dsNFUiSj3EY"
       );
-      Parse.serverURL = 'https://pg-app-xbvkl5kilhgu1tfytwdhpjgfiyigkv.scalabl.cloud/1/';
+    Parse.serverURL = 'https://pg-app-xbvkl5kilhgu1tfytwdhpjgfiyigkv.scalabl.cloud/1/';
     Parse.User.enableUnsafeCurrentUser()
     var currentUser = Parse.User.current();
     if (currentUser) {
@@ -14,24 +14,28 @@ $(function () {
         console.log('not');
     }
     username = Parse.User.current().get("username");
-    document.getElementById("username").innerText = username
-
+    document.getElementById("username").innerText = username;
+    document.getElementById("new_chat").onclick = function(){
+        //Переходим к добавлению нового диалога
+        //window.location.href = "chat.html";
+    }
     function getAllChats() {
         var Chat = Parse.Object.extend("Chat");
         //Основной элемент для заполнения
         var articleDiv = document.querySelector("ul.shoutbox-content");
-        
-
-        
         var dateQuery = new Parse.Query(Chat);
-        
+        dateQuery.equalTo("UserName", username);
         dateQuery.descending("updatedAt");
         dateQuery.limit(50);
         //dateQuery.include("LastMessage");
         dateQuery.find({
             success: function (msg) {
+                //console.log(msg[0].get("ToUser"));
+
                 var msgArray = msg;
                 for (let i = 0; i < msg.length; i++) {
+                    console.log(msg[i].get("Messages")[msg[i].get("Messages").length - 1]["text"]);
+
                     var p = document.createElement("p");
                     p.className = "shoutbox-comment";
                     //Здесь будет цикл, но его пока нету:)
@@ -41,11 +45,11 @@ $(function () {
                     li.className = "liClass";
                     li.onclick = function () {
                             console.log("click li");
-                            window.location.href = "chat.html?User=" + msgArray[i].get("ToUser");
+                            window.location.href = "chat.html?ToUser=" + msg[i].get("ToUser");
                     }
                     var liText = document.createTextNode(msg[i].get("ToUser"));
                     span.appendChild(liText);
-                    var pText = document.createTextNode(msg[i].get("LastMessage"));
+                    var pText = document.createTextNode(msg[i].get("Messages")[msg[i].get("Messages").length - 1]["text"]);
                     p.appendChild(pText);
                     
                     var spanDate = document.createElement("span");
@@ -62,43 +66,6 @@ $(function () {
                 
             }
         });
-        // var mod = document.querySelectorAll('.liClass');
-        // for (let index = 0; index < mod.length; index++) {
-        //     mod[index].addEventListener('click', function () {
-        //         window.location.href="chat.html?User=" + msgArray[index].get("ToUser");
-        //     });
-        // }
-        
-        //var ul = document.getElementById("chat-container");
-        // var li = document.createElement("li");
-        // li.innerText = "Created element by js";
-        // ul.appendChild(li);
-
-        // ul.append('<li>' +
-        //     '<span class="shoutbox-username">' + Parse.User.current().get("username") + '</span>' +
-        //     '<p class="shoutbox-comment">' + "comment to add" + '</p>' +
-        //     '<div class="shoutbox-comment-details"><span class="shoutbox-comment-reply" data-name="' + "Another Name " + '">REPLY</span>' +
-        //     '<span class="shoutbox-comment-ago">' + "Date here" + '</span></div>' +
-        //     '</li>');
     }
     getAllChats();
-
-    //Пример добавления и получения данных
-    // var Chat = Parse.Object.extend("Chat");
-    // var chat = new Chat();
-    // chat.set("LastMessage", "Some message here");
-    // chat.set("UserID", currentUser.id);
-    // console.log(currentUser.id);
-    // chat.set("UserName", currentUser.get("username"));
-    // chat.save(null,{
-    //     success: function(chat){
-    //         var query = new Parse.Query(Chat);
-    //         query.equalTo("UserID", currentUser.id);
-    //         query.find({
-    //             success:function (usersChat) {
-    //                console.log(usersChat);
-    //             }
-    //         });
-    //     }
-    // });
 });
