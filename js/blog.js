@@ -1,10 +1,11 @@
 $(function() {
  
     Parse.$ = jQuery;
-    Parse.serverURL="https://pg-app-r1ry1cwdn9kabthducfp1dvkssywd6.scalabl.cloud/1/";
-    //ApplicationID, JavaScriptKey 
-    Parse.initialize("HFJB7ZXbqGm9m0qo4EmOyIJqh55RboPAAzpjFSUE", "OD9l47qabknpoBcQaPhu57UIPph5EEKbSFpSAzaS");
- 
+    Parse.initialize(
+      "Kc9c2eku460JzgK2M9S2Ev6n3PNsj5bWFOPSEYna",
+      "qHlJuzaCNON0INY3Ysy8h9CWPar58dsNFUiSj3EY"
+    );
+    Parse.serverURL = 'https://pg-app-xbvkl5kilhgu1tfytwdhpjgfiyigkv.scalabl.cloud/1/';
     var TestObject = Parse.Object.extend("TestObject");
     var testObject = new TestObject();
     testObject.save({foo: "bar"}).then(function(object) {
