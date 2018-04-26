@@ -21,6 +21,12 @@ $(function () {
         //window.location.href = "chat.html";
         var user = document.getElementById("search").value;
         console.log(user);
+        if (user.length != 0) {
+            //Ищем
+        }
+        else{
+            alert('Это поле не может быть пустым');
+        }
     }
     function getAllChats() {
         var Chat = Parse.Object.extend("Chat");
@@ -57,7 +63,11 @@ $(function () {
 
                     var spanDate = document.createElement("span");
                     spanDate.className = "shoutbox-comment-ago";
-                    var dateText = document.createTextNode(msg[i].get("updatedAt"));
+                    var options = {
+                        year: "numeric", month: "short",
+                       day: "numeric", hour: "2-digit", minute: "2-digit"
+                    };
+                    var dateText = document.createTextNode(msg[i].get("updatedAt").toLocaleTimeString("en-us", options));
                     spanDate.appendChild(dateText);
 
                     li.appendChild(span);
