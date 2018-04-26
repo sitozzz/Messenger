@@ -6,7 +6,9 @@ $(function () {
     );
     Parse.serverURL = 'https://pg-app-xbvkl5kilhgu1tfytwdhpjgfiyigkv.scalabl.cloud/1/';
 
-    
+    document.getElementById("back").onclick = function () {
+        window.location.href = "main.html";
+    }
 
     function parseUrlQuery() { 
         var data = {}; 

@@ -15,7 +15,14 @@
         <span id="username"></span>
         <img src='./img/refresh.png' />
     </h1>
-
+    <div class="col-lg-6 search-form">
+            <div class="input-group">
+                <input type="text" id="search" class="form-control" placeholder="Search for...">
+                <span class="input-group-btn">
+                    <button class="btn btn-secondary" type="button" id="new_chat">Go!</button>
+                </span>
+            </div>
+    </div>
     <div class="shoutbox">
         <h2>Your chats
             <img src='./img/refresh.png' />
@@ -23,13 +30,11 @@
         <!--Сюда чаты и последние сообщения-->
         <ul class="shoutbox-content" id="chat-container"></ul>
     </div>
-    <div class="footer">
 
-        <button class="btn btn-default" type="button" id="new_chat">
-            <span class="glyphicon glyphicon-star" aria-hidden="true"></span>Add New Chat
-        </button>
 
-    </div>
+    
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="js/parse.js"></script>
     <script src="js/main.js"></script>

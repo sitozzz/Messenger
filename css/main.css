@@ -15,7 +15,12 @@ body{
     margin: 0 auto;
     overflow: hidden;
 }
-
+.search-form{
+    width: 50%;
+    margin: auto;
+    position: relative;
+    
+}
 h1 {
     background-color:  #87bfef;
     box-shadow: 0px 1px 1px 0.00px rgba(0, 0, 0, 0.1);
