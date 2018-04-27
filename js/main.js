@@ -15,6 +15,8 @@ $(function () {
     }
     username = Parse.User.current().get("username");
     document.getElementById("username").innerText = username;
+    //Текущее количество диалогов
+    var dialogCount = 0;
     //Добавление нового диалога
     document.getElementById("new_chat").onclick = function () {
 
@@ -28,6 +30,62 @@ $(function () {
             alert('Это поле не может быть пустым');
         }
     }
+
+    function interval() {
+        setInterval(function () {
+            var Chat = Parse.Object.extend("Chat");
+            //Основной элемент для заполнения
+            var articleDiv = document.querySelector("ul.shoutbox-content");
+            var dateQuery = new Parse.Query(Chat);
+            dateQuery.equalTo("UserName", username);
+            
+            dateQuery.find({
+                success: function (msg) {
+                    
+                    if (msg.length != dialogCount) {
+                        var articleDiv = document.querySelector("ul.shoutbox-content");
+                        for (let i = dialogCount; i < msg.length; i++) {
+                        
+                            var p = document.createElement("p");
+                            p.className = "shoutbox-comment";
+                            //Здесь будет цикл, но его пока нету:)
+                            var li = document.createElement("li");
+                            var span = document.createElement("span")
+                            span.className = "shoutbox-username";
+                            li.className = "liClass";
+                            li.onclick = function () {
+                                console.log("click li");
+                                window.location.href = "chat.html?ToUser=" + msg[i].get("ToUser");
+                            }
+                            var liText = document.createTextNode(msg[i].get("ToUser"));
+                            span.appendChild(liText);
+                            var pText = document.createTextNode(msg[i].get("Messages")[msg[i].get("Messages").length - 1]["text"]);
+                            p.appendChild(pText);
+
+                            var spanDate = document.createElement("span");
+                            spanDate.className = "shoutbox-comment-ago";
+                            var options = {
+                                year: "numeric", month: "short",
+                            day: "numeric", hour: "2-digit", minute: "2-digit"
+                            };
+                            var dateText = document.createTextNode(msg[i].get("updatedAt").toLocaleTimeString("en-us", options));
+                            spanDate.appendChild(dateText);
+
+                            li.appendChild(span);
+                            li.appendChild(p);
+                            li.appendChild(spanDate);
+
+                            articleDiv.appendChild(li);
+
+                        }
+                        dialogCount = msg.length;
+                    }                    
+                }
+            })
+        }, 1500);
+    }
+    
+
     function getAllChats() {
         var Chat = Parse.Object.extend("Chat");
         //Основной элемент для заполнения
@@ -39,9 +97,10 @@ $(function () {
         //dateQuery.include("LastMessage");
         dateQuery.find({
             success: function (msg) {
-                //console.log(msg[0].get("ToUser"));
-
+                //Запоминаем количество сообщений при загрузке
+                dialogCount = msgArray.length;
                 var msgArray = msg;
+                console.log("len = " + msgArray.length)
                 for (let i = 0; i < msg.length; i++) {
                     console.log(msg[i].get("Messages")[msg[i].get("Messages").length - 1]["text"]);
 
@@ -80,5 +139,9 @@ $(function () {
             }
         });
     }
+    //Получаем список диалогов 1 раз
     getAllChats();
+
+
+    interval();
 });
