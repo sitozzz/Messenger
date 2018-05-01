@@ -67,19 +67,18 @@ $(function () {
             alert("Сообщение не может быть пустым!");
         }
     }
-    
+
     function interval() {
         setInterval(function () {
             var Chat = Parse.Object.extend("Chat");
             var query = new Parse.Query(Chat);
             query.equalTo("UserName", sender);
             query.equalTo("ToUser", toUser);
-            
+
             query.find({
                 success: function (msg) {
                     var array = msg[0].get("Messages");
                     if (array.length != msgBuffer) {
-                        console.log("Зашел в иф");
                         var articleDiv = document.querySelector("ul.shoutbox-content");
                         for (let i = msgBuffer; i < array.length; i++) {
                             var text = array[i]["text"];
@@ -134,40 +133,75 @@ $(function () {
         query.limit(50);
         query.find({
             success: function (msg) {
-                var array = msg[0].get("Messages");
-                msgBuffer = array.length;
-                for (let i = 0; i < array.length; i++) {
-                    var text = array[i]["text"];
-                    var author = array[i]["author"];
-                    var date = array[i]["date"];
+                if (msg.length == 0) {
+                    //Создаем новый диалог
+                    var messages = [
+                        {
+                          "text": "Hello!",
+                          "date": new Date(),
+                          "author": sender
+                        }];
+                    var new_chat = new Chat();
+                    new_chat.set("UserName", sender);
+                    new_chat.set("ToUser", toUser);
+                    new_chat.set("Messages", messages);
+                    new_chat.save(null,{
+                        success:function (user) {
+                            console.log("Success");
+                        },
+                        error:function (user, error) {
+                            console.log("Error");
+                        }
+                    });
+                    var new_chat = new Chat();
+                    new_chat.set("UserName", toUser);
+                    new_chat.set("ToUser", sender);
+                    new_chat.set("Messages", messages);
+                    new_chat.save(null,{
+                        success:function (user) {
+                            console.log("Success");
+                        },
+                        error:function (user, error) {
+                            console.log("Error");
+                        }
+                    });
+                }
+                else {
+                    var array = msg[0].get("Messages");
+                    msgBuffer = array.length;
+                    for (let i = 0; i < array.length; i++) {
+                        var text = array[i]["text"];
+                        var author = array[i]["author"];
+                        var date = array[i]["date"];
 
-                    var p = document.createElement("p");
-                    p.className = "shoutbox-comment";
+                        var p = document.createElement("p");
+                        p.className = "shoutbox-comment";
 
-                    var li = document.createElement("li");
-                    var span = document.createElement("span")
-                    span.className = "shoutbox-username";
-                    li.className = "liClass";
-                    li.onclick = function () {
-                        console.log("click li");
-                        //Доделать ответ по клику
-                        //window.location.href = "chat.html?ToUser=" + msg[i].get("ToUser");
+                        var li = document.createElement("li");
+                        var span = document.createElement("span")
+                        span.className = "shoutbox-username";
+                        li.className = "liClass";
+                        li.onclick = function () {
+                            console.log("click li");
+                            //Доделать ответ по клику
+                            //window.location.href = "chat.html?ToUser=" + msg[i].get("ToUser");
+                        }
+                        var liText = document.createTextNode(author);
+                        span.appendChild(liText);
+                        var pText = document.createTextNode(text);
+                        p.appendChild(pText);
+
+                        var spanDate = document.createElement("span");
+                        spanDate.className = "shoutbox-comment-ago";
+                        var dateText = document.createTextNode(date);
+                        spanDate.appendChild(dateText);
+
+                        li.appendChild(span);
+                        li.appendChild(p);
+                        li.appendChild(spanDate);
+
+                        articleDiv.appendChild(li);
                     }
-                    var liText = document.createTextNode(author);
-                    span.appendChild(liText);
-                    var pText = document.createTextNode(text);
-                    p.appendChild(pText);
-
-                    var spanDate = document.createElement("span");
-                    spanDate.className = "shoutbox-comment-ago";
-                    var dateText = document.createTextNode(date);
-                    spanDate.appendChild(dateText);
-
-                    li.appendChild(span);
-                    li.appendChild(p);
-                    li.appendChild(spanDate);
-
-                    articleDiv.appendChild(li);
                 }
             }
         });

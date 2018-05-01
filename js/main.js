@@ -18,13 +18,51 @@ $(function () {
     //Текущее количество диалогов
     var dialogCount = 0;
     //Добавление нового диалога
-    document.getElementById("new_chat").onclick = function () {
 
-        //window.location.href = "chat.html";
+    document.getElementById("search").onclick = function () {
+        //console.log("click");
+        document.getElementById("search_advice_wrapper").style.visibility = 'visible';
+    }
+
+    document.getElementById("search").oninput = function () {
+
+        $("#search_advice_wrapper").html("").show();
+        append_advice();
+    }
+
+    function append_advice() {
+        search_text = document.getElementById("search").value;
+        if (search_text.length > 0) {
+            var reg = new RegExp(search_text, "i")
+
+            var Users = Parse.Object.extend("User");
+            var usrQuery = new Parse.Query(Users);
+
+            usrQuery.find({
+                success: function (usr) {
+                    for (let i = 0; i < usr.length; i++) {
+                        var usrName = usr[i].get("username");
+                        if (usrName.match(reg) != null) {
+                            $('#search_advice_wrapper').append('<div class="advice_variant">' + usrName + '</div>');
+                        }
+                    }
+                    var elems = document.getElementsByClassName("advice_variant");
+                    for (i = 0; i < elems.length; i++) {
+                        elems[i].onclick = function () {
+                            text = this.innerText;
+                            document.getElementById("search").value = text;
+                            document.getElementById("search_advice_wrapper").style.visibility = 'hidden';
+                            $("#search_advice_wrapper").html("").show();
+                        }
+                    }
+                }
+            });
+        }
+    }
+    document.getElementById("new_chat").onclick = function () {
         var user = document.getElementById("search").value;
-        console.log(user);
         if (user.length != 0) {
-            //Ищем
+            window.location.href = "chat.html?ToUser=" + user;
         }
         else{
             alert('Это поле не может быть пустым');
