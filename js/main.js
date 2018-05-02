@@ -59,7 +59,7 @@ $(function () {
             });
         }
     }
-    
+
     document.getElementById("new_chat").onclick = function () {
         var user = document.getElementById("search").value;
         if (user.length != 0) {
@@ -73,7 +73,7 @@ $(function () {
     document.getElementById('logout').onclick = logout;
     
     function logout() {
-        window.location.href = "login.html";
+        window.location.href = "index.html";
         Parse.User.logOut().then(() => {
             var currentUser = Parse.User.current();  
         });
