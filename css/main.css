@@ -237,8 +237,8 @@ h2 span {
 
 #search_advice_wrapper{
     display:none;
-    width: 350px;
-    background-color: rgb(80, 80, 114);
+    width: 88%;
+    background-color: #87bfef;
     color: rgb(255, 227, 189);
     -moz-opacity: 0.95;
     opacity: 0.95;
@@ -247,7 +247,7 @@ h2 span {
     filter:alpha(opacity=95);
     z-index:999;
     position: absolute;
-    top: 24px; left: 0px;
+    top: 40px; left: 24px;
 }
 
 #search_advice_wrapper .advice_variant{
@@ -257,13 +257,13 @@ h2 span {
 }
 #search_advice_wrapper .advice_variant:hover{
     color:#FEFFBD;
-    background-color:#818187;
+    background-color:#2f915b;
 }
 #search_advice_wrapper .active{
     cursor: pointer;
     padding: 5px;
     color:#FEFFBD;
-    background-color:#818187;
+    background-color:#04e750;
 }
 
 
