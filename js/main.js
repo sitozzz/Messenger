@@ -59,6 +59,7 @@ $(function () {
             });
         }
     }
+    
     document.getElementById("new_chat").onclick = function () {
         var user = document.getElementById("search").value;
         if (user.length != 0) {
@@ -67,6 +68,15 @@ $(function () {
         else{
             alert('Это поле не может быть пустым');
         }
+    }
+
+    document.getElementById('logout').onclick = logout;
+    
+    function logout() {
+        window.location.href = "login.html";
+        Parse.User.logOut().then(() => {
+            var currentUser = Parse.User.current();  
+        });
     }
 
     function interval() {
