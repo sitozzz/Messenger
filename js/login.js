@@ -55,18 +55,25 @@ $(function () {
     function loginWithFB() {
         console.log('Welcome!  Fetching your information.... ');
         FB.api('/me', function (response) {
-            console.log('Successful login for: ' + response.name);            
+            console.log('Successful login for: ' + response.name);    
+            var new_fb_name = response.name;
+            new_fb_name = new_fb_name.replace(/ /g, '_');        
             let User = Parse.Object.extend('User');
             let userQuery = new Parse.Query(User);
-            userQuery.equalTo('username', response.name);
+            userQuery.equalTo('username', new_fb_name);
+            
+            console.log(new_fb_name);
             userQuery.find({
                 success: function (usr) {
                     //Если не найден, регистрируем
                     if (usr.length == 0) {
                         let Users = Parse.Object.extend('User');
                         let new_user = new Users();
-                        new_user.set('username', response.name);
-                        new_user.set('password', response.name + 'pswd-fb-login');
+                        
+                        
+                        console.log('name'+new_fb_name);
+                        new_user.set('username', new_fb_name);
+                        new_user.set('password', new_fb_name + 'pswd-fb-login');
                         new_user.save(null, {
                             success: function (user) {
                                 console.log('Registration with Fb success');
@@ -79,7 +86,7 @@ $(function () {
                             }
                         });
                     } else {
-                        Parse.User.logIn(response.name,  response.name + 'pswd-fb-login',{
+                        Parse.User.logIn(new_fb_name,  new_fb_name + 'pswd-fb-login',{
                             success: function (user) {
                                 window.location.href = 'main.html';
                             },

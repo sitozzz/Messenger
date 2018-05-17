@@ -92,7 +92,9 @@ $(function () {
             span.className = "shoutbox-username";
             li.className = "liClass";
             li.onclick = function () {
-                window.location.href = "chat.html?ToUser=" + iterator[k];
+                
+
+                window.location.href = "chat.html?ToUser=" + btoa(iterator[k]);
             }
 
             var liText = document.createTextNode('Dialog with:    ' + iterator[k]);
