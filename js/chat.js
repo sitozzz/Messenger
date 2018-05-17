@@ -3,7 +3,7 @@ $(function () {
     Parse.initialize(
         "pS2OMrZoPr7Z0Dg3JNiBEt26W7sUffOAlXkcaUnP",
         "mPoO6vFBsXqk9ysMy4Hycvz94WPPf3klnc7NUfs3"
-      );
+    );
     Parse.serverURL = 'https://pg-app-jns12nd4yd1x33wca2iqz5cys7u4se.scalabl.cloud/1/';
 
     document.getElementById("back").onclick = function () {
@@ -25,7 +25,7 @@ $(function () {
     toUser = parseUrlQuery()['ToUser'];
     document.getElementById("chatwith").innerText = toUser;
     sender = Parse.User.current().get("username");
-    
+
     //Отправка нового сообщения
     document.getElementById("send_msg").onclick = function () {
         var text = document.getElementById("message").value;
@@ -33,40 +33,24 @@ $(function () {
             //Отправка
             var Chat = Parse.Object.extend("Chat");
             var new_message = new Chat();
-            //var query = new Parse.Query(Chat);
-            //query.equalTo("UserName", sender);
-            //query.equalTo("ToUser", toUser);
+            //Загрузка файла
+            var fileUploadControl = $("#profilePhotoFileUpload")[0];
+            if (fileUploadControl.files.length > 0) {
+                var file = fileUploadControl.files[0];
+                var filename = new Date().getDate();
+                var name = 'file_' + filename + '.jpg';
+
+                var parseFile = new Parse.File(name, file);
+                new_message.set('File', parseFile);
+                console.log('file loaded');
+            }
             new_message.set('UserName', sender);
             new_message.set('ToUser', toUser);
             new_message.set('Messages', text);
             new_message.save();
-            // query.find({
-            //     success: function (msg) {
-            //         var array = msg[0].get("Messages");
-            //         var elem = { "text": text, "date": new Date(), "author": sender };
-            //         array.push(elem);
-            //         msg[0].set("Messages", array);
-            //         msg[0].save();
-            //     }
-            // });
-
-            // query = new Parse.Query(Chat);
-            // query.equalTo("UserName", toUser);
-            // query.equalTo("ToUser", sender);
-
-            // query.find({
-            //     success: function (msg) {
-            //         var array = msg[0].get("Messages");
-            //         var elem = { "text": text, "date": new Date(), "author": sender };
-            //         array.push(elem);
-            //         msg[0].set("Messages", array);
-            //         msg[0].save();
-            //         //msgBuffer = array.length;
-            //     }
-            // });
-
+            //Чистим поля
+            document.getElementById("profilePhotoFileUpload").value = "";
             document.getElementById("message").value = "";
-            //location.reload();
         }
         else {
             alert("Сообщение не может быть пустым!");
@@ -80,27 +64,25 @@ $(function () {
             var query = new Parse.Query(Chat);
             query.containedIn('UserName', [sender, toUser]);
             query.containedIn('ToUser', [sender, toUser]);
-            //query.equalTo("UserName", sender);
-            //query.equalTo("ToUser", toUser);
-            
+
+
             var articleDiv = document.querySelector("ul.shoutbox-content");
 
             query.find({
                 success: function (msg) {
-                    //var array = msg[0].get("Messages");
-                    //if (array.length != msgBuffer) {
-                    
-                    if (msg.length != msgBuffer ) {
+
+
+                    if (msg.length != msgBuffer) {
                         console.log("msg.length" + msg.length)
-                        
+
                         for (let i = msgBuffer; i < msg.length; i++) {
                             var text = msg[i].get('Messages');
                             var author = msg[i].get('UserName');
                             var date = msg[i].get('createdAt');
-    
+                            var file = msg[i].get('File');
                             var p = document.createElement("p");
                             p.className = "shoutbox-comment";
-    
+
                             var li = document.createElement("li");
                             var span = document.createElement("span")
                             span.className = "shoutbox-username";
@@ -112,18 +94,34 @@ $(function () {
                             }
                             var liText = document.createTextNode(author);
                             span.appendChild(liText);
+                            var br = document.createElement("br");
                             var pText = document.createTextNode(text);
                             p.appendChild(pText);
-    
+
                             var spanDate = document.createElement("span");
                             spanDate.className = "shoutbox-comment-ago";
                             var dateText = document.createTextNode(date);
                             spanDate.appendChild(dateText);
-    
+
                             li.appendChild(span);
                             li.appendChild(p);
                             li.appendChild(spanDate);
-    
+                            li.appendChild(br)
+                            var filePlace = document.createElement("img");
+                            if (file != undefined) {
+                                filePlace.src = file.url();
+                                filePlace.style.height = "68px";
+                                filePlace.style.width = "68px";
+
+                                li.appendChild(filePlace);
+                                filePlace.onclick = function () {
+                                    var file = msg[i].get('File');
+                                    console.log(file);
+                                    document.getElementById('bigger_image').src = file.url();
+                                    document.getElementById('win').removeAttribute('style');
+                                }
+
+                            }
                             articleDiv.appendChild(li);
                         }
                         msgBuffer = msg.length;
@@ -138,7 +136,7 @@ $(function () {
         var Chat = Parse.Object.extend("Chat");
         //Основной элемент для заполнения
         var articleDiv = document.querySelector("ul.shoutbox-content");
-        
+
         var Chat = Parse.Object.extend("Chat");
         var query = new Parse.Query(Chat);
         query.containedIn('UserName', [sender, toUser]);
@@ -147,45 +145,30 @@ $(function () {
             success: function (msg) {
                 if (msg.length == 0) {
                     //Создаем новый диалог
-                    // var messages = [
-                    //     {
-                    //       "text": "Hello!",
-                    //       "date": new Date(),
-                    //       "author": sender
-                    //     }];
+
                     var new_chat = new Chat();
                     new_chat.set("UserName", sender);
                     new_chat.set("ToUser", toUser);
                     new_chat.set("Messages", 'Hi there!');
-                    new_chat.save(null,{
-                        success:function (user) {
+                    new_chat.save(null, {
+                        success: function (user) {
                             console.log("Success");
                         },
-                        error:function (user, error) {
+                        error: function (user, error) {
                             console.log("Error");
                         }
                     });
-                    // var new_chat = new Chat();
-                    // new_chat.set("UserName", toUser);
-                    // new_chat.set("ToUser", sender);
-                    // new_chat.set("Messages", messages);
-                    // new_chat.save(null,{
-                    //     success:function (user) {
-                    //         console.log("Success");
-                    //     },
-                    //     error:function (user, error) {
-                    //         console.log("Error");
-                    //     }
-                    // });
+
                 }
                 else {
-                    console.log('msg length = '+msg.length);
+                    console.log('msg length = ' + msg.length);
                     //var array = msg[0].get("Messages");
                     msgBuffer = msg.length;
                     for (let i = 0; i < msg.length; i++) {
                         var text = msg[i].get('Messages');
                         var author = msg[i].get('UserName');
                         var date = msg[i].get('createdAt');
+                        var file = msg[i].get('File');
 
                         var p = document.createElement("p");
                         p.className = "shoutbox-comment";
@@ -203,7 +186,7 @@ $(function () {
                         span.appendChild(liText);
                         var pText = document.createTextNode(text);
                         p.appendChild(pText);
-
+                        var br = document.createElement("br");
                         var spanDate = document.createElement("span");
                         spanDate.className = "shoutbox-comment-ago";
                         var dateText = document.createTextNode(date);
@@ -212,6 +195,23 @@ $(function () {
                         li.appendChild(span);
                         li.appendChild(p);
                         li.appendChild(spanDate);
+                        li.appendChild(br)
+
+                        var filePlace = document.createElement("img");
+                        if (file != undefined) {
+                            filePlace.src = file.url();
+                            filePlace.style.height = "68px";
+                            filePlace.style.width = "68px";
+
+                            li.appendChild(filePlace);
+                            filePlace.onclick = function () {
+                                var file = msg[i].get('File');
+                                console.log(file);
+                                document.getElementById('bigger_image').src = file.url();
+                                document.getElementById('win').removeAttribute('style');
+                            }
+
+                        }
 
                         articleDiv.appendChild(li);
                     }
@@ -219,9 +219,7 @@ $(function () {
             }
         });
     }
-
     //Получаем историю сообщений
     getAllChats();
-
     interval();
 });
