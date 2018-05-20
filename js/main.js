@@ -18,7 +18,6 @@ $(function () {
     //Текущее количество диалогов
     var dialogCount = 0;
     //Добавление нового диалога
-
     document.getElementById("search").onclick = function () {
         //console.log("click");
         document.getElementById("search_advice_wrapper").style.visibility = 'visible';
@@ -59,13 +58,45 @@ $(function () {
             });
         }
     }
+    //Удаление
+    function delete_cookie(cookie_name) {
+        var cookie_date = new Date(); // Текущая дата и время
+        cookie_date.setTime(cookie_date.getTime() - 1);
+        document.cookie = cookie_name += "=; expires=" + cookie_date.toGMTString();
+    }
+
+    //Установка coolie
+    function set_cookie(name, value, exp_y, exp_m, exp_d, path, domain, secure) {
+        var cookie_string = name + "=" + escape(value);
+
+        if (exp_y) {
+            var expires = new Date(exp_y, exp_m, exp_d);
+            cookie_string += "; expires=" + expires.toGMTString();
+        }
+
+        if (path)
+            cookie_string += "; path=" + escape(path);
+
+        if (domain)
+            cookie_string += "; domain=" + escape(domain);
+
+        if (secure)
+            cookie_string += "; secure";
+
+        document.cookie = cookie_string;
+    }
 
     document.getElementById("new_chat").onclick = function () {
         var user = document.getElementById("search").value;
         if (user.length != 0) {
-            window.location.href = "chat.html?ToUser=" + user;
-        }
-        else {
+            //Предварительно очищаем 
+            delete_cookie('ToUser');
+            //Сохраняем получателя в cookie
+            set_cookie('ToUser', user);
+            //Переходим на страницу чата
+            window.location.href = "chat.html";//?ToUser=" + user;
+            
+        } else {
             alert('Это поле не может быть пустым');
         }
     }
@@ -92,9 +123,9 @@ $(function () {
             span.className = "shoutbox-username";
             li.className = "liClass";
             li.onclick = function () {
-                
-
-                window.location.href = "chat.html?ToUser=" + btoa(iterator[k]);
+                delete_cookie('ToUser');
+                set_cookie('ToUser',iterator[k]);
+                window.location.href = "chat.html";//?ToUser=" + btoa(iterator[k]);
             }
 
             var liText = document.createTextNode('Dialog with:    ' + iterator[k]);
@@ -112,8 +143,11 @@ $(function () {
             var spanDate = document.createElement("span");
             spanDate.className = "shoutbox-comment-ago";
             var options = {
-                year: "numeric", month: "short",
-                day: "numeric", hour: "2-digit", minute: "2-digit"
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
             };
 
             var tme = final_dict[iterator[k]][1]
@@ -133,6 +167,7 @@ $(function () {
     }
 
     var final_dict = {};
+
     function interval() {
         setInterval(function () {
 
@@ -173,14 +208,12 @@ $(function () {
                                     }
                                     if (check == false && UserName_dict[keys1[i]][1] > ToUser_dict[keys1[i]][1]) {
                                         final_dict[keys1[i]] = UserName_dict[keys1[i]];
-                                    }
-                                    else if (check == false) {
+                                    } else if (check == false) {
                                         final_dict[keys1[i]] = ToUser_dict[keys1[i]];
                                     }
                                 }
                                 create_Dialogs(final_dict);
-                            }
-                            else {
+                            } else {
                                 for (let i = 0; i < keys2.length; i++) {
                                     var check = false
                                     if (UserName_dict[keys2[i]] == undefined) {
@@ -191,8 +224,7 @@ $(function () {
 
                                     if (check == false && UserName_dict[keys2[i]][1] > ToUser_dict[keys2[i]][1]) {
                                         final_dict[keys2[i]] = UserName_dict[keys2[i]];
-                                    }
-                                    else if (check == false) {
+                                    } else if (check == false) {
                                         final_dict[keys2[i]] = ToUser_dict[keys2[i]];
                                     }
                                 }
@@ -241,8 +273,11 @@ $(function () {
                     var spanDate = document.createElement("span");
                     spanDate.className = "shoutbox-comment-ago";
                     var options = {
-                        year: "numeric", month: "short",
-                        day: "numeric", hour: "2-digit", minute: "2-digit"
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit"
                     };
                     var dateText = document.createTextNode(msg[i].get("updatedAt").toLocaleTimeString("en-us", options));
                     spanDate.appendChild(dateText);

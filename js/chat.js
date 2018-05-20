@@ -7,9 +7,11 @@ $(function () {
     Parse.serverURL = 'https://pg-app-jns12nd4yd1x33wca2iqz5cys7u4se.scalabl.cloud/1/';
 
     document.getElementById("back").onclick = function () {
+        delete_cookie('ToUser');
         window.location.href = "main.html";
     }
     var msgBuffer = 0;
+
     function parseUrlQuery() {
         var data = {};
         if (location.search) {
@@ -22,8 +24,27 @@ $(function () {
         return data;
     }
 
-    toUser = parseUrlQuery()['ToUser'];
-    console.log('touser = '+toUser);
+    //Удаление cookie
+    function delete_cookie(cookie_name) {
+        var cookie_date = new Date(); // Текущая дата и время
+        cookie_date.setTime(cookie_date.getTime() - 1);
+        document.cookie = cookie_name += "=; expires=" + cookie_date.toGMTString();
+    }
+
+    //Получение cookie
+    function get_cookie(cookie_name) {
+        var results = document.cookie.match('(^|;) ?' + cookie_name + '=([^;]*)(;|$)');
+
+        if (results){
+            console.log(unescape(results[2]));
+            return (unescape(results[2]));
+        }
+        else
+            return null;
+    }
+    //Достаем имя получателя из cookie
+    toUser = get_cookie('ToUser');//parseUrlQuery()['ToUser'];
+    console.log('touser = ' + toUser);
     document.getElementById("chatwith").innerText = toUser;
     sender = Parse.User.current().get("username");
 
@@ -52,8 +73,7 @@ $(function () {
             //Чистим поля
             document.getElementById("profilePhotoFileUpload").value = "";
             document.getElementById("message").value = "";
-        }
-        else {
+        } else {
             alert("Сообщение не может быть пустым!");
         }
     }
@@ -160,8 +180,7 @@ $(function () {
                         }
                     });
 
-                }
-                else {
+                } else {
                     console.log('msg length = ' + msg.length);
                     //var array = msg[0].get("Messages");
                     msgBuffer = msg.length;
